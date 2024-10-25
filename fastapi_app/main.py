@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import random
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 app = FastAPI()
 
@@ -25,7 +26,6 @@ async def get_index():
         content = file.read()
     return HTMLResponse(content=content)
 
-
 # Endpoint to handle animal selection and return a random image
 @app.get("/animal")
 async def get_animal_image(name: str):
@@ -37,7 +37,6 @@ async def get_animal_image(name: str):
     selected_image = random.choice(images)
     image_url = f"/static/data/{name}/{selected_image.name}"
     return {"image_url": image_url}
-
 
 # Endpoint to handle file upload
 @app.post("/upload")
@@ -65,7 +64,6 @@ async def upload_file(file: UploadFile = File(...)):
     return JSONResponse(
         {"filename": filename, "filesize": formatted_filesize, "filetype": filetype}
     )
-
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
